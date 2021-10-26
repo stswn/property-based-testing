@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Property based testing</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/solarized.css" id="theme">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<link rel="stylesheet" href="local.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section><h2>Property based testing</h2></section>
+				<section>
+					<ul>
+						<li class="fragment">Don't test individual cases</li>
+						<li class="fragment">Check general properties of code</li>
+						<li class="fragment">Test results should be easily reproducible</li>
+						<li class="fragment">Test results should be easy to understand</li>
+					</ul>
+				</section>
+				<section>
+					<h3>1999</h3>
+					<div class="fragment imageLine">
+						<img src="images/Haskell-Logo.svg" width="450" height="300">
+						<img src="images/John_Hughes_(computer_scientist).jpg" width="300" height="300">
+					</div>
+					<div class="fragment">QuickCheck</div>
+				</section>
+				<section>
+					<div class="fragment imageLine">
+						<img src="images/scala-spiral.png" width="60" height="100" />
+						<img src="images/scalacheck_logo_1.png" width="60" height="60" />
+						<img src="images/scalacheck_logo_2.png" width="120" height="60" />
+					</div>
+					<div class="fragment imageLine">
+						<img src="images/python_logo.png" width="60" height="60" />
+						Hypothesis
+					</div>
+					<div class="fragment imageLine">
+						<img src="images/JS-logo.png" width="60" height="60" />
+						<img src="images/fastcheck-logo.png" width="210" height="60" />
+					</div>
+				</section>
+				<section>.</section>
+				<section>
+					<div class="smallText">Tip 1.</div>
+					<div>Don't be too fancy with your properties</div>
+					<div class="smallText fragment" style="margin-top: 30px">Try to formulate properties that actually describe your code function</div>
+				</section>
+				<section>.</section>
+				<section>
+					fast-check allows you to easily reproduce failed test scenario
+				</section>
+				<section>
+					fast-check tries to minimize failing test case
+				</section>
+				<section>
+					Arbitraries are as important as properties
+				</section>
+				<section>
+					Built in arbitraries: <br />
+					<span class="fragment inlineCode">fc.float()</span><!--
+					--><span class="fragment inlineCode">, fc.integer()</span><!--
+					--><span class="fragment inlineCode">, fc.nat()</span><!--
+					--><span class="fragment inlineCode">, fc.boolean()</span><!--
+					--><span class="fragment inlineCode">, fc.string()</span><!--
+					--><span class="fragment">, and many, many more...</span>
+				</section>
+				<section>
+					Combinators: <br />
+						<pre class="fragment">fc.constant&lt;T&gt;(value: T): Arbitrary&lt;T&gt;</pre>
+						<pre class="fragment">
+fc.array&lt;T&gt;(arb: Arbitrary&lt;T&gt;):
+  Arbitrary&lt;T[]&gt;</pre>
+						<pre class="fragment">
+fc.oneof&lt;T&gt;(...arbs: Arbitrary&lt;T&gt;[]):
+  Arbitrary&lt;T&gt;</pre>
+						<pre class="fragment">
+fc.record&lt;T&gt;(
+  recordModel: {[Key:string]: Arbitrary&lt;T&gt;}
+): Arbitrary&lt;{[Key:string]: T}&gt;</pre>
+				</section>
+				<section>
+					Transformers: <br />
+					<pre class="fragment snippet">arb.map(mapper: (t: T) => U): Arbitrary&lt;U&gt;</pre>
+					<pre class="fragment">arb.chain(fmapper: (t: T) => Arbitrary&lt;U&gt;): Arbitrary&lt;U&gt;</pre>
+					<pre class="fragment">arb.filter(predicate: (t: T) => boolean): Arbitrary&lt;T&gt;</pre>
+				</section>
+				<section>
+					<div class="smallText">Tip 2.</div>
+					<div>Use unit testing intuition when writing arbitraries</div>
+					<img src="images/miss-target.jpg" />
+				</section>
+				<section>.</section>
+				<section>
+					<h3>Back to props</h3>
+					How to come up with ideas for properties
+				</section>
+				<section>
+					<h3>Correctness of outcome</h3>
+					<pre class="fragment">abs(x) >= 0</pre>
+					<div class="fragment smallText">Many algorithms are hard to write and easy to test</div>
+				</section>
+				<section>
+					<h3>Invariants</h3>
+					<pre class="fragment">array.length === sort(array).length</pre>
+					<div class="fragment smallText">Invariants are probably the easiest properties to test</div>
+				</section>
+				<section>
+					<h3>Inversion</h3>
+					<pre class="fragment">g(f(x)) === x</pre>
+					<div class="fragment smallText">Very useful property of encoders and decoders</div>
+				</section>
+				<section>
+					<h3>Commutativity</h3>
+					<div>Different paths to same destination</div>
+					<img src="images/Commutative_square.svg" />
+					<pre class="fragment">reverse(prepend(array, elem)) === append(reverse(array), elem)</pre>
+				</section>
+				<section>
+					<h3>Model</h3>
+					<div>
+						Use simpler / less effective <br />
+						implementation to check correctness
+					</div>
+				</section>
+				<section>.</section>
+				<section>
+					<div class="smallText">Tip 3.</div>
+					<div>Use property based testing ideas in different contexts</div>
+					<ul>
+						<li class="fragment">Test properties on production data</li>
+						<li class="fragment">
+							Use generators for other purposes:<br />
+							<ul>
+								<li>Fake data for development</li>
+								<li>Performance testing</li>
+								<li>...</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<a href="https://github.com/dubzzz/fast-check/blob/master/documentation/1-Guides/IssuesDiscovered.md">
+						fast-check success stories ;)
+					</a>
+				</section>
+				<section>
+					Thank you!
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>

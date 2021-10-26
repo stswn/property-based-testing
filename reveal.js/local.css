@@ -1,0 +1,21 @@
+div.imageLine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.imageLine img {
+    margin: 20px;
+}
+
+div.smallText {
+    font-size: smaller;
+}
+
+.inlineCode {
+    font-family: monospace;
+}
+
+.snippet {
+    width: 300px;
+}
