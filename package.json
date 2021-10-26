@@ -1,0 +1,50 @@
+{
+  "name": "property-based-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "testAll": "jest",
+    "test-01": "jest reverse.spec.ts",
+    "run-02-number": "ts-node src/02_shrinking/shrinkNumber.ts",
+    "run-02-array": "ts-node src/02_shrinking/shrinkArray.ts",
+    "test-03": "jest coin.spec.ts",
+    "run-03": "ts-node src/03_arb_intuition/coinArbStats.ts",
+    "test-04": "jest musicPlayer.spec.ts"
+  },
+  "keywords": [
+    "property-based-testing",
+    "model-based-testing"
+  ],
+  "author": "Stanisław Swianiewicz",
+  "license": "ISC",
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/**/?(*.)(spec|test).+(ts|tsx|js)"
+    ]
+  },
+  "dependencies": {
+    "immer": "^6.0.9",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "fast-check": "^1.24.2",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.0.0"
+  }
+}
